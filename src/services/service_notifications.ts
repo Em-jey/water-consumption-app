@@ -1,15 +1,19 @@
 const PushNotification = require('react-native-push-notification');
 // import PushNotification from 'react-native-push-notification';
 import {minute, hour, now, second} from '../utils/time';
+import {increaseTodayValue} from './service_firebase_db';
 class NotificationManagerClass {
   constructor() {
     PushNotification.configure({
       onRegister: function (token: any) {
-        console.log('TOKEN:', token);
+        // console.log('TOKEN:', token);
       },
 
       onNotification: function (notification: any) {
-        console.log('NOTIFICATION:', notification);
+        // console.log('NOTIFICATION:', notification);
+        if (notification.action && notification.action === 'ok') {
+          increaseTodayValue();
+        }
       },
 
       onRegistrationError: function (err: any) {
@@ -28,7 +32,6 @@ class NotificationManagerClass {
   }
 
   sendNotification(title: string, message: string, id: number | null = null) {
-    console.log('sendNotification');
     if (!id) {
       id = Math.floor(now().valueOf() / 5000);
     }
@@ -39,22 +42,21 @@ class NotificationManagerClass {
       autoCancel: true,
       vibrate: true,
       vibration: 300,
-      date: new Date(now() + 10 * second),
-      // actions: ['nope', 'ok'],
-      // repeatType: 'time',
-      // repeatTime: minute * 2,
+      date: new Date(now() + 2 * hour),
+      actions: ['nope', 'ok'],
+      repeatType: 'time',
+      repeatTime: hour * 2,
     });
     return id;
   }
 
-  cancelNotification(id: number) {
-    PushNotification.cancelLocalNotifications({id: `${id}`});
+  cancelNotification() {
+    // PushNotification.cancelLocalNotifications({id: `${id}`});
+    PushNotification.cancelAllLocalNotifications();
   }
 
-  checkNotifications() {
-    PushNotification.getScheduledLocalNotifications((list: any) => {
-      console.log('got notifies jet to show: ', list);
-    });
+  async checkNotifications(callback: (arg: any) => void) {
+    PushNotification.getScheduledLocalNotifications(callback);
   }
 }
 

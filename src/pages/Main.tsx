@@ -16,14 +16,18 @@ import {login as loginPath} from '../navigation/pathsConst';
 import NotificationManager from '../services/service_notifications';
 import {
   subscribeTodayValue,
-  setTodayCount,
+  setStartCount,
+  subscribeNotifyID,
+  setNotifyID,
 } from '../services/service_firebase_db';
 
 type Props = {} & RouteComponentProps;
 
 const Main: React.FC<Props> = (props) => {
   const [notificationID, setNotificationID] = useState<number | null>(null);
-  const [subscription, setSubscription] = useState<any>(null);
+  const [subToValue, setSubToValue] = useState<any>(null);
+  const [subToNotify, setSubToNotify] = useState<any>(null);
+  const [drankGlasses, setDrankGlasses] = useState<number>(0);
   const progressAnim = useRef(new Animated.Value(0)).current;
   const dim = Dimensions.get('window');
 
@@ -33,12 +37,19 @@ const Main: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
-    console.log('mounted');
-    setTodayCount();
-    const sub = subscribeTodayValue(dbValueChange);
-    setSubscription(sub);
+    setStartCount();
+    checkNotify();
+    const subValue = subscribeTodayValue(dbValueChange);
+    setSubToValue(subValue);
+    const subNotifyID = subscribeNotifyID(dbNotifyChange);
+    setSubToNotify(subNotifyID);
     return () => {
-      subscription.off();
+      if (subToValue) {
+        subToValue.off();
+      }
+      if (subToNotify) {
+        subToNotify.off();
+      }
     };
   }, []);
 
@@ -49,9 +60,8 @@ const Main: React.FC<Props> = (props) => {
     if (value > 12) {
       value = 12;
     }
+    setDrankGlasses(value);
     const toValue = (dim.width - 30) * (value / 12);
-    // console.log('dbValueChange value: ', value);
-    // console.log('dbValueChange toValue: ', toValue);
     Animated.timing(progressAnim, {
       toValue,
       duration: 500,
@@ -60,39 +70,43 @@ const Main: React.FC<Props> = (props) => {
     }).start();
   };
 
-  const testNotify = () => {
+  const dbNotifyChange = (value: number | null) => {
+    setNotificationID(value);
+  };
+
+  const setNotification = () => {
     const notifyId = NotificationManager.sendNotification(
       'Stay hydrated',
       'Hey, Drink a glass of water',
     );
-    setNotificationID(notifyId);
+    setNotifyID(notifyId);
   };
 
   const cancelNotify = () => {
-    if (!notificationID) {
-      return;
-    }
-    NotificationManager.cancelNotification(notificationID);
-    setNotificationID(null);
+    NotificationManager.cancelNotification();
+    setNotifyID(null);
   };
 
   const logoff = () => {
     auth().signOut();
+    cancelNotify();
     props.history.push(loginPath);
+  };
+
+  const checkNotify = () => {
+    NotificationManager.checkNotifications((notifyList: any) => {
+      const notifyID = notifyList.length ? notifyList[0].id : null;
+      setNotifyID(notifyID);
+      if (!notifyID) {
+        setNotification();
+      }
+    });
   };
 
   return (
     <View style={styles.container}>
-      <Text>Main Page</Text>
-      <View style={styles.notifyButton}>
-        <Button onPress={testNotify} title="hey" />
-      </View>
-      <Button
-        onPress={cancelNotify}
-        title={`cancel notify id: ${notificationID}`}
-      />
       <Text style={styles.infoText}>
-        You have drank x glasses of water today
+        You have drank {drankGlasses} glasses of water today
       </Text>
       <View style={styles.progressContainer}>
         <Animated.View
@@ -105,6 +119,22 @@ const Main: React.FC<Props> = (props) => {
         />
       </View>
       <Button onPress={logoff} title="logoff" />
+      <View style={styles.devContainer}>
+        <Text>dev box</Text>
+        <View style={styles.devButons}>
+          <Button
+            onPress={() => {
+              cancelNotify();
+              setNotification();
+            }}
+            title="Notify"
+          />
+          <Button
+            onPress={cancelNotify}
+            title={`Cancel notify id: ${notificationID}`}
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -118,11 +148,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   notifyButton: {
-    marginVertical: 30,
+    marginBottom: 30,
   },
   infoText: {
     textAlign: 'center',
     fontSize: 28,
+    lineHeight: 32,
   },
   progressContainer: {
     width: '100%',
@@ -137,5 +168,15 @@ const styles = StyleSheet.create({
     height: 28,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
+  },
+  devContainer: {
+    position: 'absolute',
+    bottom: 15,
+    left: 15,
+    width: '100%',
+  },
+  devButons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

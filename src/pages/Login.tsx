@@ -30,7 +30,6 @@ const Login: React.FC<Props> = (props) => {
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        // console.log('user: ', user);
         props.history.push(mainPath);
       })
       .catch((err) => {
