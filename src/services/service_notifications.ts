@@ -1,5 +1,6 @@
 const PushNotification = require('react-native-push-notification');
-
+// import PushNotification from 'react-native-push-notification';
+import {minute, hour, now, second} from '../utils/time';
 class NotificationManagerClass {
   constructor() {
     PushNotification.configure({
@@ -26,23 +27,34 @@ class NotificationManagerClass {
     });
   }
 
-  sendNotification(title: string, message: string) {
+  sendNotification(title: string, message: string, id: number | null = null) {
     console.log('sendNotification');
-    PushNotification.localNotification({
+    if (!id) {
+      id = Math.floor(now().valueOf() / 5000);
+    }
+    PushNotification.localNotificationSchedule({
+      id: id,
       title,
       message,
       autoCancel: true,
       vibrate: true,
       vibration: 300,
-      actions: ['nope', 'ok'],
+      date: new Date(now() + 10 * second),
+      // actions: ['nope', 'ok'],
+      // repeatType: 'time',
+      // repeatTime: minute * 2,
     });
-    // id: 123,
-    // title: 'Hello there',
-    // message: 'Hey, drink a glass of water',
-    // repeatType: 'hour',
-    // repeatTime: 2,
-    // invokeApp: true,
-    // actions: "['Nope', 'Sure']",
+    return id;
+  }
+
+  cancelNotification(id: number) {
+    PushNotification.cancelLocalNotifications({id: `${id}`});
+  }
+
+  checkNotifications() {
+    PushNotification.getScheduledLocalNotifications((list: any) => {
+      console.log('got notifies jet to show: ', list);
+    });
   }
 }
 

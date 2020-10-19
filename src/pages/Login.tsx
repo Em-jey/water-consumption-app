@@ -11,7 +11,6 @@ import auth from '@react-native-firebase/auth';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
-
 import {main as mainPath} from '../navigation/pathsConst';
 
 type Props = {} & RouteComponentProps;
@@ -30,8 +29,8 @@ const Login: React.FC<Props> = (props) => {
 
     auth()
       .signInWithEmailAndPassword(email, password)
-      .then((user) => {
-        console.log('user: ', user);
+      .then(() => {
+        // console.log('user: ', user);
         props.history.push(mainPath);
       })
       .catch((err) => {
