@@ -1,12 +1,14 @@
 const PushNotification = require('react-native-push-notification');
-// import PushNotification from 'react-native-push-notification';
-import {minute, hour, now, second} from '../utils/time';
+import {hour, now} from '../utils/time';
 import {increaseTodayValue} from './service_firebase_db';
+
+const notificationInverval = hour * 2;
+
 class NotificationManagerClass {
   constructor() {
     PushNotification.configure({
       onRegister: function (token: any) {
-        // console.log('TOKEN:', token);
+        console.log('TOKEN:', token);
       },
 
       onNotification: function (notification: any) {
@@ -42,10 +44,10 @@ class NotificationManagerClass {
       autoCancel: true,
       vibrate: true,
       vibration: 300,
-      date: new Date(now() + 2 * hour),
+      date: new Date(now() + notificationInverval),
       actions: ['nope', 'ok'],
       repeatType: 'time',
-      repeatTime: hour * 2,
+      repeatTime: notificationInverval,
     });
     return id;
   }
