@@ -1137,6 +1137,13 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
+"@react-native-community/push-notification-ios@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/push-notification-ios/-/push-notification-ios-1.6.0.tgz#ca2107c6921c84f725edd16b32be287c9e3866c3"
+  integrity sha512-cZMG7IBtGX+IZ7pKa7zysX0Upz4nz5KNWWVMX7kQshdwkd1NPqmH9wL5GdW/RRttTnjmESSQz4zeHKYsDLAkSQ==
+  dependencies:
+    invariant "^2.2.4"
+
 "@react-native-firebase/app@^8.4.5":
   version "8.4.5"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-8.4.5.tgz#a5194c34a1f75af8641153163700305ae578d31d"
@@ -1259,6 +1266,11 @@
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
+
+"@types/react-native-push-notification@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@types/react-native-push-notification/-/react-native-push-notification-5.0.5.tgz#a84efdeb15af414a89b1291f4df631266d6a4330"
+  integrity sha512-rdpEb+YZtTmGJ7qEhwENjNkICU6pnwlCV2U+kvU6cAhuQxeQFgxFTKijN3kqOWL9SW8l0PeW29QREx6mvdeurg==
 
 "@types/react-native@^0.63.2":
   version "0.63.25"
@@ -5630,6 +5642,11 @@ react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-i
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-native-push-notification@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-6.1.1.tgz#58bc2e3619e79a2bc93078cb0b761ff8d7bbb2e9"
+  integrity sha512-PiBmogOloztUqpSlNsB8i27wZ84CXXhC4GGvrG7Eev7OP9iA3PoQ3+AWtW3dBfWzXlRJzFg39x1jlhvvMWNN0Q==
 
 react-native@0.63.2:
   version "0.63.2"
